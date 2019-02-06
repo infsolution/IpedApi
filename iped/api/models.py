@@ -3,7 +3,7 @@ from django.contrib.auth import *
 from django.db import models
 
 class Padaria(models.Model):
-	favoritos = models.ManyToManyField(User)
+	favoritos = models.ManyToManyField(User, related_name='favoritos')
 	nome = models.CharField(max_length=80)
 	endereco = models.CharField(max_length=80)
 	latitude = models.DecimalField(max_digits=10, decimal_places=8)
@@ -29,7 +29,7 @@ class Produto(models.Model):
 class Venda(models.Model):
 	padaria = models.ForeignKey(Padaria, related_name='vendas', on_delete=models.CASCADE)
 	usuario = models.ForeignKey(User, related_name='compras', on_delete=models.SET_NULL, null=True)
-	valor = models.DecimalField(max_digits=8, decimal_places=2)
+	valor = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
 	closed = models.BooleanField(default=False)
 	dateFinish = models.DateTimeField(auto_now_add=False, blank=True, null=True)
 
@@ -37,4 +37,4 @@ class Venda(models.Model):
 class Item(models.Model):
 	venda = models.ForeignKey(Venda, related_name='itens', on_delete=models.CASCADE)
 	produto = models.ForeignKey(Produto, related_name='produto', on_delete=models.SET_NULL, null=True)
-
+	quantidade = models.IntegerField(default=0)
